@@ -31,4 +31,9 @@ public class TopicoController {
         return ResponseEntity.ok(dadosDetalhamentoTopico);
     }
 
+    @GetMapping
+    public ResponseEntity listar(){
+        var dadosDetalhamentoTopicos = topicoService.listar();
+        return ResponseEntity.ok(dadosDetalhamentoTopicos);
+    }
 }

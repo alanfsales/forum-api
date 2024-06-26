@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TopicoService {
 
@@ -55,5 +57,11 @@ public class TopicoService {
         }
 
         return new DadosDetalhamentoTopico(topicoRepository.getReferenceById(id));
+    }
+
+    public List<DadosDetalhamentoTopico> listar(){
+        List<Topico>topicos = topicoRepository.findAllByOrderByDataCriacaoDesc();
+
+        return topicos.stream().map(t -> new DadosDetalhamentoTopico(t)).toList();
     }
 }

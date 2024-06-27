@@ -1,5 +1,6 @@
 package com.forum.service;
 
+import com.forum.dto.DadosAtualizaTopico;
 import com.forum.dto.DadosCadastroTopico;
 import com.forum.dto.DadosDetalhamentoTopico;
 import com.forum.exception.ValidacaoException;
@@ -27,26 +28,15 @@ public class TopicoService {
 
     @Transactional
     public DadosDetalhamentoTopico salvar(DadosCadastroTopico dados){
-        if (!cursoRepository.existsById(dados.curso_id())){
-            throw new ValidacaoException("Curso não encontado");
-        }
-        if (!usuarioRepository.existsById(dados.autor_id())){
-            throw new ValidacaoException("Autor não encontado");
-        }
-        var jaTemEsseTitulo = topicoRepository.existsByTitulo(dados.titulo());
-        var jaTemEssaMensagem = topicoRepository.existsByMensagem(dados.mensagem());
+        validarDados(dados);
 
-        if (jaTemEsseTitulo || jaTemEssaMensagem){
-            throw new ValidacaoException("Já existe esse topico");
-        }
         var curso = cursoRepository.getReferenceById(dados.curso_id());
         var autor = usuarioRepository.getReferenceById(dados.autor_id());
         var topico = new Topico(dados.titulo(), dados.mensagem(), curso, autor);
+
         topico = topicoRepository.save(topico);
 
         var dadosDetalhementoTopico = new DadosDetalhamentoTopico(topico);
-
-        System.out.println(dadosDetalhementoTopico);
 
         return dadosDetalhementoTopico;
     }
@@ -63,5 +53,50 @@ public class TopicoService {
         List<Topico>topicos = topicoRepository.findAllByOrderByDataCriacaoDesc();
 
         return topicos.stream().map(t -> new DadosDetalhamentoTopico(t)).toList();
+    }
+
+    @Transactional
+    public DadosDetalhamentoTopico atualizar(Long id, DadosAtualizaTopico dados) {
+        buscar(id);
+
+        var topico = topicoRepository.getReferenceById(id);
+
+        if (dados.titulo() != null){
+            topico.setTitulo(dados.titulo());
+        }
+        if (dados.mensagem() != null){
+            topico.setMensagem(dados.mensagem());
+        }
+        if (dados.curso_id() != null){
+            if (!cursoRepository.existsById(dados.curso_id())){
+                throw new ValidacaoException("Curso não encontado");
+            }
+            var curso = cursoRepository.getReferenceById(dados.curso_id());
+            topico.setCurso(curso);
+        }
+        if (dados.autor_id() != null){
+            if (!usuarioRepository.existsById(dados.autor_id())){
+                throw new ValidacaoException("Autor não encontado");
+            }
+            var autor = usuarioRepository.getReferenceById(dados.curso_id());
+            topico.setAutor(autor);
+        }
+
+        return new DadosDetalhamentoTopico(topico);
+    }
+
+    private void validarDados(DadosCadastroTopico dados) {
+        if (!cursoRepository.existsById(dados.curso_id())){
+            throw new ValidacaoException("Curso não encontado");
+        }
+        if (!usuarioRepository.existsById(dados.autor_id())){
+            throw new ValidacaoException("Autor não encontado");
+        }
+        var jaTemEsseTitulo = topicoRepository.existsByTitulo(dados.titulo());
+        var jaTemEssaMensagem = topicoRepository.existsByMensagem(dados.mensagem());
+
+        if (jaTemEsseTitulo || jaTemEssaMensagem){
+            throw new ValidacaoException("Já existe esse topico");
+        }
     }
 }

@@ -26,7 +26,7 @@ public class TopicoController {
         return ResponseEntity.created(uri).body(dadosDetalhamentoTopico);
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity buscar(@PathVariable Long id){
         var dadosDetalhamentoTopico = topicoService.buscar(id);
         return ResponseEntity.ok(dadosDetalhamentoTopico);
@@ -38,11 +38,19 @@ public class TopicoController {
         return ResponseEntity.ok(dadosDetalhamentoTopicos);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
+    @Transactional
     public ResponseEntity atualizar(@PathVariable Long id,
                                     @RequestBody DadosAtualizaTopico dados){
         var dadosDetalhamentoTopicos = topicoService.atualizar(id, dados);
 
         return ResponseEntity.ok(dadosDetalhamentoTopicos);
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity remover(@PathVariable Long id){
+        topicoService.remover(id);
+        return ResponseEntity.noContent().build();
     }
 }

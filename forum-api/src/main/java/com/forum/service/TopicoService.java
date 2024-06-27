@@ -62,9 +62,15 @@ public class TopicoService {
         var topico = topicoRepository.getReferenceById(id);
 
         if (dados.titulo() != null){
+            if (topicoRepository.existsByTitulo(dados.titulo())){
+                throw new ValidacaoException("Já existe um tópico com esse titulo");
+            }
             topico.setTitulo(dados.titulo());
         }
         if (dados.mensagem() != null){
+            if (topicoRepository.existsByMensagem(dados.mensagem())){
+                throw new ValidacaoException("Já existe um tópico com essa mensagem");
+            }
             topico.setMensagem(dados.mensagem());
         }
         if (dados.curso_id() != null){
@@ -83,6 +89,12 @@ public class TopicoService {
         }
 
         return new DadosDetalhamentoTopico(topico);
+    }
+
+    @Transactional
+    public void remover(Long id) {
+        buscar(id);
+        topicoRepository.deleteById(id);
     }
 
     private void validarDados(DadosCadastroTopico dados) {

@@ -1,6 +1,5 @@
 package com.forum.controller;
 
-import com.forum.dto.DadosAtualizaTopico;
 import com.forum.dto.DadosCadastroTopico;
 import com.forum.service.TopicoService;
 import jakarta.transaction.Transactional;
@@ -41,7 +40,7 @@ public class TopicoController {
     @PutMapping("/{id}")
     @Transactional
     public ResponseEntity atualizar(@PathVariable Long id,
-                                    @RequestBody DadosAtualizaTopico dados){
+                                    @RequestBody @Valid DadosCadastroTopico dados){
         var dadosDetalhamentoTopicos = topicoService.atualizar(id, dados);
 
         return ResponseEntity.ok(dadosDetalhamentoTopicos);

@@ -44,7 +44,7 @@ create table topico(
 );
 
 
-create table respostas(
+create table resposta(
 
     id bigint not null auto_increment,
     mensagem varchar(255) not null,
@@ -58,3 +58,4 @@ create table respostas(
      constraint fk_resposta_autor_id foreign key(autor_id) references usuario(id)
 
 );
+

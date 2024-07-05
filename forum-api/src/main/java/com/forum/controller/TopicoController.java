@@ -20,8 +20,11 @@ public class TopicoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity salvar(@RequestBody @Valid DadosCadastroTopico dados, UriComponentsBuilder uriBuilder) {
-        var dadosDetalhamentoTopico = topicoService.salvar(dados);
+    public ResponseEntity salvar(@RequestHeader("Authorization") String token,
+                                 @RequestBody @Valid DadosCadastroTopico dados,
+                                 UriComponentsBuilder uriBuilder) {
+
+        var dadosDetalhamentoTopico = topicoService.salvar(dados, token);
         var uri = uriBuilder.path("/topicos/{id}").buildAndExpand(dadosDetalhamentoTopico.id()).toUri();
 
         return ResponseEntity.created(uri).body(dadosDetalhamentoTopico);
@@ -41,17 +44,19 @@ public class TopicoController {
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity atualizar(@PathVariable Long id,
+    public ResponseEntity atualizar(@RequestHeader("Authorization") String token,
+                                    @PathVariable Long id,
                                     @RequestBody @Valid DadosCadastroTopico dados){
-        var dadosDetalhamentoTopicos = topicoService.atualizar(id, dados);
+        var dadosDetalhamentoTopicos = topicoService.atualizar(id, dados, token);
 
         return ResponseEntity.ok(dadosDetalhamentoTopicos);
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity remover(@PathVariable Long id){
-        topicoService.remover(id);
+    public ResponseEntity remover(@RequestHeader("Authorization") String token,
+                                  @PathVariable Long id){
+        topicoService.remover(id, token);
         return ResponseEntity.noContent().build();
     }
 }

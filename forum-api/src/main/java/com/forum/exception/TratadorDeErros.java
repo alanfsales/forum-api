@@ -59,6 +59,11 @@ public class TratadorDeErros {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado");
     }
 
+    @ExceptionHandler(UsuarioSemPerimssao.class)
+    public ResponseEntity tratarErroUsuarioSemPermissao() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado. Autor sem perimissão");
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity tratarErro500(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " +ex.getLocalizedMessage());

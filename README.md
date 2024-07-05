@@ -31,6 +31,7 @@ Vamos nos concentrar especificamente nos tópicos.
 
 ### Resultado
 
+![Documentação](https://github.com/alanfsales/assets/blob/main/F%C3%B3rum%20API/documenta%C3%A7%C3%A3o.png)
 
 ![Login](https://github.com/alanfsales/assets/blob/main/F%C3%B3rum%20API/login.png)
 

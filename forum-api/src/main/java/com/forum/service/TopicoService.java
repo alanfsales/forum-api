@@ -2,11 +2,14 @@ package com.forum.service;
 
 import com.forum.dto.DadosCadastroTopico;
 import com.forum.dto.DadosDetalhamentoTopico;
+import com.forum.exception.UsuarioSemPerimssao;
 import com.forum.exception.ValidacaoException;
 import com.forum.model.Topico;
+import com.forum.model.Usuario;
 import com.forum.repository.CursoRepository;
 import com.forum.repository.TopicoRepository;
 import com.forum.repository.UsuarioRepository;
+import com.forum.security.TokenService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,11 +28,15 @@ public class TopicoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @Transactional
-    public DadosDetalhamentoTopico salvar(DadosCadastroTopico dados){
+    public DadosDetalhamentoTopico salvar(DadosCadastroTopico dados, String token){
         validarDados(dados);
+
+        var autor = pegarAutorPeloToken(token);
         var curso = cursoRepository.getReferenceById(dados.curso_id());
-        var autor = usuarioRepository.getReferenceById(dados.autor_id());
         var topico = new Topico(dados.titulo(), dados.mensagem(), curso, autor);
 
         topico = topicoRepository.save(topico);
@@ -49,8 +56,14 @@ public class TopicoService {
     }
 
     @Transactional
-    public DadosDetalhamentoTopico atualizar(Long id, DadosCadastroTopico dados) {
+    public DadosDetalhamentoTopico atualizar(Long id, DadosCadastroTopico dados, String token) {
         var topico = topicoRepository.getReferenceById(id);
+        var autor = pegarAutorPeloToken(token);
+
+        if (!autor.equals(topico.getAutor())){
+            throw new UsuarioSemPerimssao("Usuario sem permissão");
+        }
+
         validarDados(dados);
 
         topico.setTitulo(dados.titulo());
@@ -59,15 +72,18 @@ public class TopicoService {
         var curso = cursoRepository.getReferenceById(dados.curso_id());
         topico.setCurso(curso);
 
-        var autor = usuarioRepository.getReferenceById(dados.curso_id());
-        topico.setAutor(autor);
-
         return new DadosDetalhamentoTopico(topico);
     }
 
     @Transactional
-    public void remover(Long id) {
-        buscar(id);
+    public void remover(Long id, String token) {
+        var topico = topicoRepository.getReferenceById(id);
+        var autor = pegarAutorPeloToken(token);
+
+        if (!autor.equals(topico.getAutor())){
+            throw new UsuarioSemPerimssao("Usuario sem permissão");
+        }
+
         topicoRepository.deleteById(id);
     }
 
@@ -75,14 +91,16 @@ public class TopicoService {
         if (!cursoRepository.existsById(dados.curso_id())){
             throw new ValidacaoException("Curso não encontado");
         }
-        if (!usuarioRepository.existsById(dados.autor_id())){
-            throw new ValidacaoException("Autor não encontado");
-        }
         var jaTemEsseTitulo = topicoRepository.existsByTitulo(dados.titulo());
         var jaTemEssaMensagem = topicoRepository.existsByMensagem(dados.mensagem());
 
         if (jaTemEsseTitulo || jaTemEssaMensagem){
             throw new ValidacaoException("Já existe esse topico");
         }
+    }
+
+    private Usuario pegarAutorPeloToken(String token){
+        var email = tokenService.getSubject(token.replace("Bearer ", "").trim());
+        return (Usuario) usuarioRepository.findByEmail(email);
     }
 }

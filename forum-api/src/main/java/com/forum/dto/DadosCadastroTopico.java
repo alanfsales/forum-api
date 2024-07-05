@@ -11,8 +11,5 @@ public record DadosCadastroTopico(
         String mensagem,
 
         @NotNull
-        Long autor_id,
-
-        @NotNull
         Long curso_id) {
 }

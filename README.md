@@ -27,6 +27,7 @@ Vamos nos concentrar especificamente nos tópicos.
 - SpringDoc (Documentação com Swagger)
 - Banco de dados Mysql
 - Flyway Migration
+- Auth0
 - Lombok
 
 ### Resultado

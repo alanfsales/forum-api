@@ -2,7 +2,7 @@ package com.forum.service;
 
 import com.forum.dto.DadosCadastroTopico;
 import com.forum.dto.DadosDetalhamentoTopico;
-import com.forum.exception.UsuarioSemPerimssao;
+import com.forum.exception.UsuarioSemPerimssaoException;
 import com.forum.exception.ValidacaoException;
 import com.forum.model.Topico;
 import com.forum.model.Usuario;
@@ -61,7 +61,7 @@ public class TopicoService {
         var autor = pegarAutorPeloToken(token);
 
         if (!autor.equals(topico.getAutor())){
-            throw new UsuarioSemPerimssao("Usuario sem permissão");
+            throw new UsuarioSemPerimssaoException("Usuario sem permissão");
         }
 
         validarDados(dados);
@@ -81,7 +81,7 @@ public class TopicoService {
         var autor = pegarAutorPeloToken(token);
 
         if (!autor.equals(topico.getAutor())){
-            throw new UsuarioSemPerimssao("Usuario sem permissão");
+            throw new UsuarioSemPerimssaoException("Usuario sem permissão");
         }
 
         topicoRepository.deleteById(id);

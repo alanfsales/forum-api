@@ -2,6 +2,7 @@ package com.forum.service;
 
 import com.forum.dto.DadosCadastroTopico;
 import com.forum.dto.DadosDetalhamentoTopico;
+import com.forum.exception.RecursoNaoEncontradoException;
 import com.forum.exception.UsuarioSemPerimssaoException;
 import com.forum.exception.ValidacaoException;
 import com.forum.model.Topico;
@@ -47,7 +48,7 @@ public class TopicoService {
     }
 
     public DadosDetalhamentoTopico buscar(Long id){
-        return new DadosDetalhamentoTopico(topicoRepository.getReferenceById(id));
+        return new DadosDetalhamentoTopico(buscarOuFalhar(id));
     }
 
     public List<DadosDetalhamentoTopico> listar(){
@@ -57,7 +58,7 @@ public class TopicoService {
 
     @Transactional
     public DadosDetalhamentoTopico atualizar(Long id, DadosCadastroTopico dados, String token) {
-        var topico = topicoRepository.getReferenceById(id);
+        var topico = buscarOuFalhar(id);
         var autor = pegarAutorPeloToken(token);
 
         if (!autor.equals(topico.getAutor())){
@@ -77,7 +78,7 @@ public class TopicoService {
 
     @Transactional
     public void remover(Long id, String token) {
-        var topico = topicoRepository.getReferenceById(id);
+        var topico = buscarOuFalhar(id);
         var autor = pegarAutorPeloToken(token);
 
         if (!autor.equals(topico.getAutor())){
@@ -102,5 +103,10 @@ public class TopicoService {
     private Usuario pegarAutorPeloToken(String token){
         var email = tokenService.getSubject(token.replace("Bearer ", "").trim());
         return (Usuario) usuarioRepository.findByEmail(email);
+    }
+
+    private Topico buscarOuFalhar(Long id){
+        return topicoRepository.findById(id).orElseThrow(() ->
+                new RecursoNaoEncontradoException("Topico não encontrado"));
     }
 }

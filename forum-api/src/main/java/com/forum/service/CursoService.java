@@ -26,8 +26,8 @@ public class CursoService {
     }
 
     @Transactional
-    public Curso salvar(Curso curso){
-        return repository.save(curso);
+    public Curso salvar(DadosCadastroCurso dados){
+        return repository.save(new Curso(dados.nome(), dados.categoria()));
     }
 
     @Transactional
@@ -35,7 +35,7 @@ public class CursoService {
         Curso curso = buscar(id);
         curso.setNome(dado.nome());
         curso.setCategoria(dado.categoria());
-        return repository.save(curso);
+        return curso;
     }
 
     @Transactional

@@ -31,7 +31,7 @@ public class CursoController {
     @PostMapping
     public ResponseEntity salvar(@RequestBody @Valid DadosCadastroCurso dados,
                                  UriComponentsBuilder uriBuilder){
-        var curso = service.salvar(new Curso(dados.nome(), dados.categoria()));
+        var curso = service.salvar(dados);
 
         var uri = uriBuilder.path("/cursos/{id}").buildAndExpand(curso.getId()).toUri();
 
@@ -47,7 +47,7 @@ public class CursoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity excluir(@PathVariable Long id){
+    public ResponseEntity remover(@PathVariable Long id){
         service.excluir(id);
         return ResponseEntity.noContent().build();
     }

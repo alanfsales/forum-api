@@ -1,5 +1,6 @@
 package com.forum.model;
 
+import com.forum.dto.DadosCadastroTopico;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,15 @@ public class Topico {
 
     @OneToMany(mappedBy = "topico")
     private List<Resposta> respostas;
+
+    public Topico(DadosCadastroTopico dados, Curso curso, Usuario autor){
+        this.titulo = dados.titulo();
+        this.mensagem = dados.mensagem();
+        this.dataCriacao = LocalDateTime.now();
+        this.status = "Não Resolvido";
+        this.curso = curso;
+        this.autor = autor;
+    }
 
     public Topico(String titulo, String mensagem, Curso curso, Usuario autor){
         this.titulo = titulo;

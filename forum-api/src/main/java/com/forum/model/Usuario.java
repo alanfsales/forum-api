@@ -1,7 +1,10 @@
 package com.forum.model;
 
+import com.forum.dto.DadosCadastroUsuario;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +14,7 @@ import java.util.List;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Usuario implements UserDetails {
 
     @Id
@@ -23,6 +27,13 @@ public class Usuario implements UserDetails {
 
     @ManyToOne
     private Perfil perfil;
+
+    public Usuario(DadosCadastroUsuario dados, Perfil perfil){
+        this.nome = dados.nome();
+        this.email = dados.email();
+        this.senha = dados.senha();
+        this.perfil = perfil;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

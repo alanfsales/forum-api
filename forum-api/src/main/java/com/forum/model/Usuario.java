@@ -1,8 +1,7 @@
 package com.forum.model;
 
-import com.forum.dto.DadosCadastroUsuario;
+import com.forum.dto.in.DadosCadastroUsuario;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

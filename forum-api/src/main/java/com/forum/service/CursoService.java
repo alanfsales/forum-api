@@ -1,6 +1,8 @@
 package com.forum.service;
 
-import com.forum.dto.DadosCadastroCurso;
+import com.forum.dto.convert.CursoConvertDTO;
+import com.forum.dto.in.DadosCadastroCurso;
+import com.forum.dto.out.DadosDetalhamentoCurso;
 import com.forum.exception.RecursoNaoEncontradoException;
 import com.forum.model.Curso;
 import com.forum.repository.CursoRepository;
@@ -16,26 +18,38 @@ public class CursoService {
     @Autowired
     private CursoRepository repository;
 
-    public List<Curso> listar(){
-        return repository.findAll();
+    @Autowired
+    private CursoConvertDTO cursoConvertDTO;
+
+    public List<DadosDetalhamentoCurso> listar(){
+        return cursoConvertDTO.paraDTO(repository.findAll());
     }
 
-    public Curso buscar(Long id){
+    public DadosDetalhamentoCurso buscar(Long id){
+        Curso curso = repository.findById(id).orElseThrow(() ->
+                new RecursoNaoEncontradoException("Curso não encontrado"));
+        return cursoConvertDTO.paraDTO(curso);
+    }
+
+    public Curso buscarEntidade(Long id){
         return repository.findById(id).orElseThrow(() ->
                 new RecursoNaoEncontradoException("Curso não encontrado"));
     }
 
     @Transactional
-    public Curso salvar(DadosCadastroCurso dados){
-        return repository.save(new Curso(dados.nome(), dados.categoria()));
+    public DadosDetalhamentoCurso salvar(DadosCadastroCurso dados){
+        Curso curso = cursoConvertDTO.paraEntidade(dados);
+        curso = repository.save(curso);
+        return cursoConvertDTO.paraDTO(curso);
     }
 
     @Transactional
-    public Curso atualizar(Long id, DadosCadastroCurso dado){
-        Curso curso = buscar(id);
+    public DadosDetalhamentoCurso atualizar(Long id, DadosCadastroCurso dado){
+        Curso curso = buscarEntidade(id);
         curso.setNome(dado.nome());
         curso.setCategoria(dado.categoria());
-        return curso;
+
+        return cursoConvertDTO.paraDTO(curso);
     }
 
     @Transactional

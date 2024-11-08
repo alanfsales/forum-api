@@ -1,6 +1,6 @@
 package com.forum.service;
 
-import com.forum.dto.DadosCadastroTopico;
+import com.forum.dto.in.DadosCadastroTopico;
 import com.forum.dto.convert.TopicoConvertDTO;
 import com.forum.exception.RecursoNaoEncontradoException;
 import com.forum.exception.UsuarioSemPerimssaoException;
@@ -57,7 +57,7 @@ public class TopicoService {
     public Topico atualizar(Long id, DadosCadastroTopico dados, String token) {
         Topico topico = buscar(id);
         Usuario autor = pegarAutorPeloToken(token);
-        Curso curso = cursoService.buscar(dados.curso_id());
+        Curso curso = cursoService.buscarEntidade(dados.curso_id());
 
         if (!autor.equals(topico.getAutor())){
             throw new UsuarioSemPerimssaoException("Usuario sem permissão");

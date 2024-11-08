@@ -1,7 +1,7 @@
 package com.forum.controller;
 
-import com.forum.dto.DadosCadastroCurso;
-import com.forum.model.Curso;
+import com.forum.dto.in.DadosCadastroCurso;
+import com.forum.dto.out.DadosDetalhamentoCurso;
 import com.forum.service.CursoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,27 +19,28 @@ public class CursoController {
     private CursoService service;
 
     @GetMapping
-    public List<Curso> listar(){
+    public List<DadosDetalhamentoCurso> listar(){
         return service.listar();
     }
 
     @GetMapping("/{id}")
-    public Curso buscar(@PathVariable Long id){
+    public DadosDetalhamentoCurso buscar(@PathVariable Long id){
         return service.buscar(id);
     }
 
     @PostMapping
-    public ResponseEntity salvar(@RequestBody @Valid DadosCadastroCurso dados,
+    public ResponseEntity<DadosDetalhamentoCurso> salvar(@RequestBody @Valid DadosCadastroCurso dados,
                                  UriComponentsBuilder uriBuilder){
-        var curso = service.salvar(dados);
+        DadosDetalhamentoCurso dadosDetalhamentoCurso = service.salvar(dados);
 
-        var uri = uriBuilder.path("/cursos/{id}").buildAndExpand(curso.getId()).toUri();
+        var uri = uriBuilder.path("/cursos/{id}")
+                .buildAndExpand(dadosDetalhamentoCurso.id()).toUri();
 
-        return ResponseEntity.created(uri).body(curso);
+        return ResponseEntity.created(uri).body(dadosDetalhamentoCurso);
     }
 
     @PutMapping("/{id}")
-    public Curso atualizar(
+    public DadosDetalhamentoCurso atualizar(
             @PathVariable Long id,
             @RequestBody @Valid DadosCadastroCurso dados){
 
@@ -47,7 +48,7 @@ public class CursoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity remover(@PathVariable Long id){
+    public ResponseEntity<Void> remover(@PathVariable Long id){
         service.excluir(id);
         return ResponseEntity.noContent().build();
     }

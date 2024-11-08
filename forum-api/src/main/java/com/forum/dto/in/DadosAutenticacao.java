@@ -1,4 +1,4 @@
-package com.forum.dto;
+package com.forum.dto.in;
 
 import jakarta.validation.constraints.NotBlank;
 

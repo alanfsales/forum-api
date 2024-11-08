@@ -1,6 +1,6 @@
 package com.forum.controller;
 
-import com.forum.dto.DadosAutenticacao;
+import com.forum.dto.in.DadosAutenticacao;
 import com.forum.security.DadosTokenJWT;
 import com.forum.model.Usuario;
 import com.forum.security.TokenService;

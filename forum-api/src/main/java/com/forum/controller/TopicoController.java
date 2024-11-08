@@ -1,6 +1,6 @@
 package com.forum.controller;
 
-import com.forum.dto.DadosCadastroTopico;
+import com.forum.dto.in.DadosCadastroTopico;
 import com.forum.dto.convert.TopicoConvertDTO;
 import com.forum.model.Topico;
 import com.forum.service.TopicoService;

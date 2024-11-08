@@ -1,4 +1,4 @@
-package com.forum.dto;
+package com.forum.dto.out;
 
 import com.forum.model.Perfil;
 import com.forum.model.Usuario;

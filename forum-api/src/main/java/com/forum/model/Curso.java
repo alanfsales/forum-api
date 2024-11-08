@@ -1,5 +1,6 @@
 package com.forum.model;
 
+import com.forum.dto.in.DadosCadastroCurso;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,10 @@ public class Curso {
     public Curso(String nome, String categoria){
         this.nome = nome;
         this.categoria = categoria;
+    }
+
+    public Curso(DadosCadastroCurso dados){
+        this.nome = dados.nome();
+        this.categoria = dados.categoria();
     }
 }

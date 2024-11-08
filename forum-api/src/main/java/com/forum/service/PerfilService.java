@@ -1,6 +1,6 @@
 package com.forum.service;
 
-import com.forum.dto.DadosCadastroPerfil;
+import com.forum.dto.in.DadosCadastroPerfil;
 import com.forum.exception.RecursoNaoEncontradoException;
 import com.forum.model.Perfil;
 import com.forum.repository.PerfilRepository;

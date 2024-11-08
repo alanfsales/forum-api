@@ -1,7 +1,7 @@
 package com.forum.dto.convert;
 
-import com.forum.dto.DadosCadastroTopico;
-import com.forum.dto.DadosDetalhamentoTopico;
+import com.forum.dto.in.DadosCadastroTopico;
+import com.forum.dto.out.DadosDetalhamentoTopico;
 import com.forum.model.Curso;
 import com.forum.model.Topico;
 import com.forum.model.Usuario;
@@ -26,7 +26,7 @@ public class TopicoConvertDTO {
     }
 
     public Topico paraTopico(DadosCadastroTopico dados, Usuario usuario){
-        Curso curso = cursoService.buscar(dados.curso_id());
+        Curso curso = cursoService.buscarEntidade(dados.curso_id());
         return new Topico(dados, curso, usuario);
     }
 }

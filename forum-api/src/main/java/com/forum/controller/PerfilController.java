@@ -1,6 +1,6 @@
 package com.forum.controller;
 
-import com.forum.dto.DadosCadastroPerfil;
+import com.forum.dto.in.DadosCadastroPerfil;
 import com.forum.model.Perfil;
 import com.forum.service.PerfilService;
 import jakarta.validation.Valid;

@@ -1,6 +1,6 @@
 package com.forum.model;
 
-import com.forum.dto.DadosCadastroTopico;
+import com.forum.dto.in.DadosCadastroTopico;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,7 +1,7 @@
 package com.forum.dto.convert;
 
-import com.forum.dto.DadosCadastroUsuario;
-import com.forum.dto.DadosDetalhamentoUsuario;
+import com.forum.dto.in.DadosCadastroUsuario;
+import com.forum.dto.out.DadosDetalhamentoUsuario;
 import com.forum.model.Perfil;
 import com.forum.model.Usuario;
 import com.forum.service.PerfilService;

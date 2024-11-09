@@ -16,22 +16,22 @@ import java.util.List;
 public class CursoController {
 
     @Autowired
-    private CursoService service;
+    private CursoService cursoService;
 
     @GetMapping
     public List<DadosDetalhamentoCurso> listar(){
-        return service.listar();
+        return cursoService.listar();
     }
 
     @GetMapping("/{id}")
     public DadosDetalhamentoCurso buscar(@PathVariable Long id){
-        return service.buscar(id);
+        return cursoService.buscar(id);
     }
 
     @PostMapping
     public ResponseEntity<DadosDetalhamentoCurso> salvar(@RequestBody @Valid DadosCadastroCurso dados,
                                  UriComponentsBuilder uriBuilder){
-        DadosDetalhamentoCurso dadosDetalhamentoCurso = service.salvar(dados);
+        DadosDetalhamentoCurso dadosDetalhamentoCurso = cursoService.salvar(dados);
 
         var uri = uriBuilder.path("/cursos/{id}")
                 .buildAndExpand(dadosDetalhamentoCurso.id()).toUri();
@@ -44,12 +44,12 @@ public class CursoController {
             @PathVariable Long id,
             @RequestBody @Valid DadosCadastroCurso dados){
 
-        return service.atualizar(id, dados);
+        return cursoService.atualizar(id, dados);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remover(@PathVariable Long id){
-        service.excluir(id);
+        cursoService.excluir(id);
         return ResponseEntity.noContent().build();
     }
 }

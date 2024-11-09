@@ -5,17 +5,12 @@ import com.forum.dto.out.DadosDetalhamentoTopico;
 import com.forum.model.Curso;
 import com.forum.model.Topico;
 import com.forum.model.Usuario;
-import com.forum.service.CursoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
 public class TopicoConvertDTO {
-
-    @Autowired
-    private CursoService cursoService;
 
     public DadosDetalhamentoTopico paraDTO(Topico topico){
         return new DadosDetalhamentoTopico(topico);
@@ -25,8 +20,7 @@ public class TopicoConvertDTO {
         return topicos.stream().map(DadosDetalhamentoTopico::new).toList();
     }
 
-    public Topico paraTopico(DadosCadastroTopico dados, Usuario usuario){
-        Curso curso = cursoService.buscarEntidade(dados.curso_id());
+    public Topico paraEntidade(DadosCadastroTopico dados, Usuario usuario, Curso curso){
         return new Topico(dados, curso, usuario);
     }
 }

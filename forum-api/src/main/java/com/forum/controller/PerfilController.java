@@ -30,7 +30,7 @@ public class PerfilController {
     }
 
     @PostMapping
-    public ResponseEntity salvar(@RequestBody DadosCadastroPerfil dados,
+    public ResponseEntity<Perfil> salvar(@RequestBody DadosCadastroPerfil dados,
                                  UriComponentsBuilder uriBuilder){
         Perfil perfil = perfilService.salvar(dados);
 
@@ -40,13 +40,13 @@ public class PerfilController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity atualizar(@PathVariable Long id,
+    public ResponseEntity<Perfil> atualizar(@PathVariable Long id,
                                     @RequestBody @Valid DadosCadastroPerfil dados){
         return ResponseEntity.ok(perfilService.atualizar(id, dados));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity remover(@PathVariable Long id){
+    public ResponseEntity<Void> remover(@PathVariable Long id){
         perfilService.remover(id);
         return ResponseEntity.noContent().build();
     }

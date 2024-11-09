@@ -1,8 +1,8 @@
 package com.forum.controller;
 
-import com.forum.dto.in.DadosCadastroTopico;
 import com.forum.dto.convert.TopicoConvertDTO;
-import com.forum.model.Topico;
+import com.forum.dto.in.DadosCadastroTopico;
+import com.forum.dto.out.DadosDetalhamentoTopico;
 import com.forum.service.TopicoService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
@@ -27,41 +27,39 @@ public class TopicoController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity salvar(@RequestHeader("Authorization") String token,
-                                 @RequestBody @Valid DadosCadastroTopico dados,
-                                 UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<DadosDetalhamentoTopico> salvar(@RequestHeader("Authorization") String token,
+                                                          @RequestBody @Valid DadosCadastroTopico dados,
+                                                          UriComponentsBuilder uriBuilder) {
 
-        Topico topico = topicoService.salvar(dados, token);
+        DadosDetalhamentoTopico dadosDetalhamentoTopico = topicoService.salvar(dados, token);
 
-        var uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
+        var uri = uriBuilder.path("/topicos/{id}").buildAndExpand(
+                dadosDetalhamentoTopico.id()).toUri();
 
-        return ResponseEntity.created(uri).body(topicoConvertDTO.paraDTO(topico));
+        return ResponseEntity.created(uri).body(dadosDetalhamentoTopico);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity buscar(@PathVariable Long id){
-        Topico topico = topicoService.buscar(id);
-        return ResponseEntity.ok(topicoConvertDTO.paraDTO(topico));
+    public DadosDetalhamentoTopico buscar(@PathVariable Long id){
+        return topicoService.buscar(id);
     }
 
     @GetMapping
-    public ResponseEntity listar(){
-        List<Topico> topicos = topicoService.listar();
-        return ResponseEntity.ok(topicoConvertDTO.paraDTO(topicos));
+    public List<DadosDetalhamentoTopico> listar(){
+        return topicoService.listar();
     }
 
     @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity atualizar(@RequestHeader("Authorization") String token,
+    public DadosDetalhamentoTopico atualizar(@RequestHeader("Authorization") String token,
                                     @PathVariable Long id,
                                     @RequestBody @Valid DadosCadastroTopico dados){
-        Topico topico = topicoService.atualizar(id, dados, token);
-        return ResponseEntity.ok(topicoConvertDTO.paraDTO(topico));
+        return topicoService.atualizar(id, dados, token);
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity remover(@RequestHeader("Authorization") String token,
+    public ResponseEntity<Void> remover(@RequestHeader("Authorization") String token,
                                   @PathVariable Long id){
         topicoService.remover(id, token);
         return ResponseEntity.noContent().build();

@@ -2,6 +2,7 @@ package com.forum.service;
 
 import com.forum.dto.in.DadosCadastroTopico;
 import com.forum.dto.convert.TopicoConvertDTO;
+import com.forum.dto.out.DadosDetalhamentoTopico;
 import com.forum.exception.RecursoNaoEncontradoException;
 import com.forum.exception.UsuarioSemPerimssaoException;
 import com.forum.exception.ValidacaoException;
@@ -35,29 +36,38 @@ public class TopicoService {
     private TokenService tokenService;
 
     @Transactional
-    public Topico salvar(DadosCadastroTopico dados, String token){
+    public DadosDetalhamentoTopico salvar(DadosCadastroTopico dados, String token){
         validarDados(dados);
         Usuario autor = pegarAutorPeloToken(token);
+        Curso curso = cursoService.buscarEntidade(dados.cursoId());
 
-        Topico topico = topicoConvertDTO.paraTopico(dados, autor);
+        Topico topico = topicoConvertDTO.paraEntidade(dados, autor, curso);
 
-        return topicoRepository.save(topico);
+        return new DadosDetalhamentoTopico(topicoRepository.save(topico));
     }
 
-    public Topico buscar(Long id){
+    public DadosDetalhamentoTopico buscar(Long id){
+        Topico topico = topicoRepository.findById(id).orElseThrow(()->
+                new RecursoNaoEncontradoException("Tópico não encontrado"));
+
+        return topicoConvertDTO.paraDTO(topico);
+    }
+
+    public Topico buscarEntidade(Long id){
         return topicoRepository.findById(id).orElseThrow(()->
                 new RecursoNaoEncontradoException("Tópico não encontrado"));
     }
 
-    public List<Topico> listar(){
-        return topicoRepository.findAllByOrderByDataCriacaoDesc();
+    public List<DadosDetalhamentoTopico> listar(){
+         List<Topico> topicos = topicoRepository.findAllByOrderByDataCriacaoDesc();
+         return topicoConvertDTO.paraDTO(topicos);
     }
 
     @Transactional
-    public Topico atualizar(Long id, DadosCadastroTopico dados, String token) {
-        Topico topico = buscar(id);
+    public DadosDetalhamentoTopico atualizar(Long id, DadosCadastroTopico dados, String token) {
+        Topico topico = buscarEntidade(id);
         Usuario autor = pegarAutorPeloToken(token);
-        Curso curso = cursoService.buscarEntidade(dados.curso_id());
+        Curso curso = cursoService.buscarEntidade(dados.cursoId());
 
         if (!autor.equals(topico.getAutor())){
             throw new UsuarioSemPerimssaoException("Usuario sem permissão");
@@ -69,12 +79,12 @@ public class TopicoService {
         topico.setMensagem(dados.mensagem());
         topico.setCurso(curso);
 
-        return topico;
+        return topicoConvertDTO.paraDTO(topico);
     }
 
     @Transactional
     public void remover(Long id, String token) {
-        Topico topico = buscar(id);
+        Topico topico = buscarEntidade(id);
         Usuario autor = pegarAutorPeloToken(token);
 
         if (!autor.equals(topico.getAutor())){
@@ -85,7 +95,7 @@ public class TopicoService {
     }
 
     private void validarDados(DadosCadastroTopico dados) {
-        cursoService.buscar(dados.curso_id());
+        cursoService.buscar(dados.cursoId());
 
         var jaTemEsseTitulo = topicoRepository.existsByTitulo(dados.titulo());
         var jaTemEssaMensagem = topicoRepository.existsByMensagem(dados.mensagem());

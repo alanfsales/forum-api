@@ -1,6 +1,5 @@
 package com.forum.controller;
 
-import com.forum.dto.convert.TopicoConvertDTO;
 import com.forum.dto.in.DadosCadastroTopico;
 import com.forum.dto.out.DadosDetalhamentoTopico;
 import com.forum.service.TopicoService;
@@ -21,9 +20,6 @@ public class TopicoController {
 
     @Autowired
     private TopicoService topicoService;
-
-    @Autowired
-    private TopicoConvertDTO topicoConvertDTO;
 
     @PostMapping
     @Transactional

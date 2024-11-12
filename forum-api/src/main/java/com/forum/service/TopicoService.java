@@ -12,6 +12,7 @@ import com.forum.model.Usuario;
 import com.forum.repository.TopicoRepository;
 import com.forum.security.TokenService;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,9 +48,7 @@ public class TopicoService {
     }
 
     public DadosDetalhamentoTopico buscar(Long id){
-        Topico topico = topicoRepository.findById(id).orElseThrow(()->
-                new RecursoNaoEncontradoException("Tópico não encontrado"));
-
+        Topico topico = buscarEntidade(id);
         return topicoConvertDTO.paraDTO(topico);
     }
 
@@ -65,21 +64,18 @@ public class TopicoService {
 
     @Transactional
     public DadosDetalhamentoTopico atualizar(Long id, DadosCadastroTopico dados, String token) {
-        Topico topico = buscarEntidade(id);
+        Topico topicoBD = buscarEntidade(id);
         Usuario autor = pegarAutorPeloToken(token);
-        Curso curso = cursoService.buscarEntidade(dados.cursoId());
 
-        if (!autor.equals(topico.getAutor())){
+        if (!autor.equals(topicoBD.getAutor())){
             throw new UsuarioSemPerimssaoException("Usuario sem permissão");
         }
-
         validarDados(dados);
+        Curso curso = cursoService.buscarEntidade(dados.cursoId());
 
-        topico.setTitulo(dados.titulo());
-        topico.setMensagem(dados.mensagem());
-        topico.setCurso(curso);
-
-        return topicoConvertDTO.paraDTO(topico);
+        Topico topicoDadosNovo = topicoConvertDTO.paraEntidade(dados, autor,curso);
+        BeanUtils.copyProperties(topicoDadosNovo, topicoBD, "id");
+        return topicoConvertDTO.paraDTO(topicoBD);
     }
 
     @Transactional

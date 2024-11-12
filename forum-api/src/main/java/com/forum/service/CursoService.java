@@ -7,6 +7,7 @@ import com.forum.exception.RecursoNaoEncontradoException;
 import com.forum.model.Curso;
 import com.forum.repository.CursoRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,9 +27,7 @@ public class CursoService {
     }
 
     public DadosDetalhamentoCurso buscar(Long id){
-        Curso curso = repository.findById(id).orElseThrow(() ->
-                new RecursoNaoEncontradoException("Curso não encontrado"));
-        return cursoConvertDTO.paraDTO(curso);
+        return cursoConvertDTO.paraDTO(buscarEntidade(id));
     }
 
     public Curso buscarEntidade(Long id){
@@ -44,10 +43,10 @@ public class CursoService {
     }
 
     @Transactional
-    public DadosDetalhamentoCurso atualizar(Long id, DadosCadastroCurso dado){
+    public DadosDetalhamentoCurso atualizar(Long id, DadosCadastroCurso dados){
         Curso curso = buscarEntidade(id);
-        curso.setNome(dado.nome());
-        curso.setCategoria(dado.categoria());
+        Curso cursoDadosNovo = cursoConvertDTO.paraEntidade(dados);
+        BeanUtils.copyProperties(cursoDadosNovo, curso, "id");
 
         return cursoConvertDTO.paraDTO(curso);
     }

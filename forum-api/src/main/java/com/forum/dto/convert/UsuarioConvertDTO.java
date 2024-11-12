@@ -26,7 +26,7 @@ public class UsuarioConvertDTO {
         return new DadosDetalhamentoUsuario(usuario);
     }
 
-    public Usuario paraUsuario(DadosCadastroUsuario dados){
+    public Usuario paraEntidade(DadosCadastroUsuario dados){
         Perfil perfil = perfilService.buscar(dados.perfilId());
         return new Usuario(dados, perfil);
     }

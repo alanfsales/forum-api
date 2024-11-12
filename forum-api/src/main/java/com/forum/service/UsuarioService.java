@@ -1,5 +1,8 @@
 package com.forum.service;
 
+import com.forum.dto.convert.UsuarioConvertDTO;
+import com.forum.dto.in.DadosCadastroUsuario;
+import com.forum.dto.out.DadosDetalhamentoUsuario;
 import com.forum.exception.RecursoNaoEncontradoException;
 import com.forum.model.Usuario;
 import com.forum.repository.UsuarioRepository;
@@ -18,13 +21,20 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private UsuarioConvertDTO usuarioConvertDTO;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public List<Usuario> listar(){;
-        return usuarioRepository.findAll();
+    public List<DadosDetalhamentoUsuario> listar(){
+        return usuarioConvertDTO.paraDTO(usuarioRepository.findAll());
     }
 
-    public Usuario buscar(Long id) {
+    public DadosDetalhamentoUsuario buscar(Long id) {
+        return usuarioConvertDTO.paraTDO(buscarEntidade(id));
+    }
+
+    public Usuario buscarEntidade(Long id) {
         return usuarioRepository.findById(id).orElseThrow(
                 () -> new RecursoNaoEncontradoException("Usuario não encontrado"));
     }
@@ -34,22 +44,25 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario salvar(Usuario usuario) {
+    public DadosDetalhamentoUsuario salvar(DadosCadastroUsuario dados) {
+        Usuario usuario = usuarioConvertDTO.paraEntidade(dados);
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-        return usuarioRepository.save(usuario);
+        return usuarioConvertDTO.paraTDO(usuarioRepository.save(usuario));
     }
 
     @Transactional
-    public Usuario atualizar(Long id, Usuario usuario) {
-        Usuario usuarioBD = buscar(id);
-        BeanUtils.copyProperties(usuario, usuarioBD, "id");
+    public DadosDetalhamentoUsuario atualizar(Long id, DadosCadastroUsuario dados) {
+        Usuario usuarioBD = buscarEntidade(id);
+        Usuario usuarioDadosNovo = usuarioConvertDTO.paraEntidade(dados);
+        BeanUtils.copyProperties(usuarioDadosNovo, usuarioBD, "id");
+        usuarioBD.setSenha(passwordEncoder.encode(usuarioBD.getSenha()));
 
-        return salvar(usuarioBD);
+        return usuarioConvertDTO.paraTDO(usuarioBD);
     }
 
     @Transactional
     public void excluir(Long id){
-        buscar(id);
+        buscarEntidade(id);
         usuarioRepository.deleteById(id);
     }
 }

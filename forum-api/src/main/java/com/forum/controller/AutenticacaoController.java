@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,9 +23,9 @@ public class AutenticacaoController {
     private TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity login(@RequestBody @Valid DadosAutenticacao dados){
-        var authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
-        var authentication = manager.authenticate(authenticationToken);
+    public ResponseEntity<DadosTokenJWT> login(@RequestBody @Valid DadosAutenticacao dados){
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(dados.email(), dados.senha());
+        Authentication authentication = manager.authenticate(authenticationToken);
 
         var token = tokenService.gerarToken((Usuario) authentication.getPrincipal());
 

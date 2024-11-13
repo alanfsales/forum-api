@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class TopicoController {
 
         DadosDetalhamentoTopico dadosDetalhamentoTopico = topicoService.salvar(dados, token);
 
-        var uri = uriBuilder.path("/topicos/{id}").buildAndExpand(
+        URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(
                 dadosDetalhamentoTopico.id()).toUri();
 
         return ResponseEntity.created(uri).body(dadosDetalhamentoTopico);

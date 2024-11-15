@@ -1,6 +1,7 @@
 package com.forum.dto.convert;
 
 import com.forum.dto.in.DadosCadastroTopico;
+import com.forum.dto.out.DadosDetalhamentoResposta;
 import com.forum.dto.out.DadosDetalhamentoTopico;
 import com.forum.model.Curso;
 import com.forum.model.Topico;

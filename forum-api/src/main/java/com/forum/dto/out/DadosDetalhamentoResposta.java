@@ -6,16 +6,13 @@ import java.time.LocalDateTime;
 
 public record DadosDetalhamentoResposta(
         Long id,
-        String tituloTopico,
         String mensagem,
         LocalDateTime dataCriacao,
-        String nomeAutor,
-        String nomeCurso
+        String nomeAutor
         ) {
 
         public DadosDetalhamentoResposta(Resposta resposta){
-                this(resposta.getId(), resposta.getTopico().getTitulo(), resposta.getMensagem(),
-                        resposta.getDataCriacao(), resposta.getAutor().getNome(),
-                        resposta.getTopico().getCurso().getNome());
+                this(resposta.getId(), resposta.getMensagem(),
+                        resposta.getDataCriacao(), resposta.getAutor().getNome());
         }
 }

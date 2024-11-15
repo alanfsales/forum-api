@@ -1,34 +1,32 @@
 # Fórum API (FórumHub)
-Este projeto é um desafio proposto no programa ONE - Oracle Next Education. Um programa de ensino realizado em parceria da Alura com a Oracle.
+Este projeto foi desenvolvido por mim, como desafio parte do programa ONE - Oracle Next Education, uma parceria entre a Alura e a Oracle. <br/>
+Trata-se de uma API REST para um fórum de discussão, onde usuários podem trocar conhecimentos, 
+criar tópicos para dúvidas e colaborar com dúvidas de outras pessoas.
 
 ### Descrição do desafio
-O objetivo é implementar uma API REST de um fórum. Um espaço onde podemos trocar conhecimentos, criar tópicos para solucionar nossas dúvidas e também utilizar para tirar as dúvidas de outras pessoas.</br>
-Vamos nos concentrar especificamente nos tópicos. 
-
-- Implementar rotas seguindo as melhores práticas do modelo REST;
-- Validações realizadas segundo as regras de negócio;
-- Implementação de uma base de dados relacional para a persistência da informação;
-- Serviço de autenticação/autorização para restringir o acesso à informação.
+O FórumHub foi projetado para ser um espaço de discussão, com funcionalidades que permite gerenciar tópicos de forma organizada e segura. 
+Este sistema poderia ser aplicado em ambientes reais, como plataformas de aprendizado, suporte técnico ou comunidades online.
+No desenvolvimento, implementei todas as funcionalidades, incluindo CRUDs para tópicos, usuários, cursos e respostas.
 
 ### Funcionalidades
-- Autenticação: gerar e validar um token JWT
-- Criar um novo tópico;
-- Mostrar todos os tópicos criados;
-- Mostrar um tópico específico;
-- Atualizar um tópico;
-- Excluir um tópico.
+- Autenticação com geração e validação de tokens JWT.
+- Criação, visualização, atualização e exclusão de:
+    - Usuários
+    - Cursos
+    - Tópicos
+    - Respostas
 
 ### Tecnologias utilizadas
-- Java 17
-- Maven
-- Spring Boot
-- Spring Data JPA
-- Spring Security (Autenticação )
-- SpringDoc (Documentação com Swagger)
-- Banco de dados Mysql
-- Flyway Migration
-- Auth0
-- Lombok
+- **Java 17:** Linguagem de programação principal do projeto.
+- **Maven:** Gerenciamento de dependências e construção do projeto.
+- **Spring Boot:** Configuração e estruturação do projeto com base no framework Spring.
+- **Spring Data JPA:** Simplificação das operações com banco de dados relacional.
+- **Spring Security e Auth0:** Implementação de autenticação segura e geração de tokens JWT.
+- **Bcrypt:** Criptografia de senhas dos usuários para maior segurança.
+- **SpringDoc e Swagger:** Documentação das rotas da API para fácil integração.
+- **MySQL:** Persistência de dados em banco de dados relacional.
+- **Flyway Migration:** Gerenciamento e versionamento de migrações de banco de dados.
+- **Lombok:** Redução de código boilerplate.
 
 ### Resultado
 
@@ -56,7 +54,10 @@ Para executar a aplicação localmente, siga estas etapas:
     "email": "teste@email.com",
     "senha": "123456"
     }</br>
-> Atenção: No projeto existem migrations do flyway que além de criar as tabelas cadastra alguns dados do banco pra conseguir iniciar os teste.
+> Atenção: No projeto existem migrations do flyway que além de criar as tabelas cadastra alguns dados no banco pra conseguir iniciar os teste.
+
+### Próximos passos
+- Telas Básicas (HTML, CSS, JS)
 
 
 

@@ -64,6 +64,11 @@ public class TratadorDeErros {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado. Autor sem permissão");
     }
 
+    @ExceptionHandler(TokenInvalidoException.class)
+    public ResponseEntity tratarErroTokenInvalido() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Acesso negado. Token inválido ou expirado!");
+    }
+
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     public ResponseEntity recursoNaoEncontrado(RecursoNaoEncontradoException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());

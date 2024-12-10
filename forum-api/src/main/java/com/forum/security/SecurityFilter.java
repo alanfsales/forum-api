@@ -1,5 +1,6 @@
 package com.forum.security;
 
+import com.forum.exception.TokenInvalidoException;
 import com.forum.repository.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,18 +27,26 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        var tokenJWT = recuperarToen(request);
+        try{
+            var tokenJWT = recuperarToen(request);
 
-        if (tokenJWT != null){
-            var subject = tokenService.getSubject(tokenJWT);
-            var usuario = repository.findByEmail(subject);
+            if (tokenJWT != null){
+                var subject = tokenService.getSubject(tokenJWT);
+                var usuario = repository.findByEmail(subject);
 
-            var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                var authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+
+            filterChain.doFilter(request, response);
+
+        }catch (TokenInvalidoException ex) {
+            // Tratar a exceção e retornar uma resposta apropriada
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN); // Código HTTP 403
+            response.setContentType("application/json");
+            response.getWriter().write("{\"erro\": \"Token inválido ou expirado!\"}");
         }
-
-        filterChain.doFilter(request, response);
     }
 
     private String recuperarToen(HttpServletRequest request) {
